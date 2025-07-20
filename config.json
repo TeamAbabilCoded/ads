@@ -1,0 +1,6 @@
+{
+  "bot_token": "ISI_TOKEN_BOT_KAMU",
+  "chat_id": "ISI_CHAT_ID_KAMU",
+  "min_delay": 15,
+  "max_delay": 30
+}
