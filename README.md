@@ -1,6 +1,4 @@
-Berikut adalah versi lengkap `README.md` untuk proyek **Auto Visit + Click + Report via Telegram** dengan proxy dan User-Agent simulasi Android/iPhone:
 
----
 
 # 🧠 Auto Visit & Click Bot with Telegram Report
 
