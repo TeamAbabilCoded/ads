@@ -34,30 +34,22 @@ def load_data():
 def setup_driver(proxy, user_agent):
     chrome_options = Options()
 
-    # Lokasi Chromium (Snap)
+    # Lokasi Chromium Snap
     chrome_options.binary_location = "/snap/bin/chromium"
 
-    # Buat direktori user-data sementara
-    user_data_dir = tempfile.mkdtemp()
-    chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
-
-    # Headless & stabilitas
+    # Headless stabil
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--remote-debugging-port=0")
 
-    # Proxy dan User-Agent
-    chrome_options.add_argument(f"--proxy-server=http://{proxy}")
+    # User-Agent dan proxy
     chrome_options.add_argument(f"user-agent={user_agent}")
+    chrome_options.add_argument(f"--proxy-server=http://{proxy}")
 
-    # Lokasi chromedriver
     service = Service("/usr/bin/chromedriver")
-
     driver = webdriver.Chrome(service=service, options=chrome_options)
-
-    # Simpan path user data untuk dibersihkan nanti
-    driver.temp_user_data_dir = user_data_dir
-
     return driver
 
 def visit_link(driver, link):
