@@ -1,0 +1,10 @@
+{
+  "android": [
+    "Mozilla/5.0 (Linux; Android 10; SM-A107F)...",
+    "Mozilla/5.0 (Linux; Android 11; Pixel 4)..."
+  ],
+  "ios": [
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 14_2)...",
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 15_1)..."
+  ]
+}
