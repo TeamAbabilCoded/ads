@@ -1,6 +1,7 @@
 import requests, random, time, json
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 
 # Load config
@@ -32,12 +33,23 @@ def load_data():
 
 def setup_driver(proxy, user_agent):
     chrome_options = Options()
+
+    # WAJIB: Lokasi Chromium snap
+    chrome_options.binary_location = "/snap/bin/chromium"
+
+    # Proxy dan user-agent
     chrome_options.add_argument(f"--proxy-server=http://{proxy}")
     chrome_options.add_argument(f"user-agent={user_agent}")
+
+    # Headless & stabilitas
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(options=chrome_options)
+
+    # WAJIB: Lokasi chromedriver
+    service = Service("/usr/bin/chromedriver")
+
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
 
 def visit_link(driver, link):
