@@ -1,4 +1,4 @@
-import requests, random, time, json
+import requests, random, time, json, tempfile, shutil
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -34,22 +34,30 @@ def load_data():
 def setup_driver(proxy, user_agent):
     chrome_options = Options()
 
-    # WAJIB: Lokasi Chromium snap
+    # Lokasi Chromium (Snap)
     chrome_options.binary_location = "/snap/bin/chromium"
 
-    # Proxy dan user-agent
-    chrome_options.add_argument(f"--proxy-server=http://{proxy}")
-    chrome_options.add_argument(f"user-agent={user_agent}")
+    # Buat direktori user-data sementara
+    user_data_dir = tempfile.mkdtemp()
+    chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
 
     # Headless & stabilitas
-    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
-    # WAJIB: Lokasi chromedriver
+    # Proxy dan User-Agent
+    chrome_options.add_argument(f"--proxy-server=http://{proxy}")
+    chrome_options.add_argument(f"user-agent={user_agent}")
+
+    # Lokasi chromedriver
     service = Service("/usr/bin/chromedriver")
 
     driver = webdriver.Chrome(service=service, options=chrome_options)
+
+    # Simpan path user data untuk dibersihkan nanti
+    driver.temp_user_data_dir = user_data_dir
+
     return driver
 
 def visit_link(driver, link):
@@ -58,7 +66,7 @@ def visit_link(driver, link):
         time.sleep(random.uniform(5, 8))
 
         # Simulasi klik (opsional)
-        if random.randint(1, 4) == 1:  # 25% klik
+        if random.randint(1, 4) == 1:  # 25% kemungkinan klik
             try:
                 iklan = driver.find_element(By.TAG_NAME, "a")
                 iklan.click()
@@ -76,12 +84,14 @@ def main():
     for proxy in proxies:
         try:
             ua_list = uas["android"] + uas["ios"]
-            for _ in range(random.randint(3, 5)):  # random visit per proxy
+            for _ in range(random.randint(3, 5)):  # Kunjungan per proxy
                 link = random.choice(links)
                 ua = random.choice(ua_list)
+
                 driver = setup_driver(proxy, ua)
                 result = visit_link(driver, link)
                 driver.quit()
+                shutil.rmtree(driver.temp_user_data_dir, ignore_errors=True)
 
                 total_visit += 1
                 if "KLIK" in result:
